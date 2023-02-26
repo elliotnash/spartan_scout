@@ -1,0 +1,189 @@
+// Allowed types
+// section, spacer, text, checkbox, counter, picture
+// picture type is not included with regular upload
+// TODO add chooser type
+{
+    name: "2023 Charged Up",
+    // This should be updated each time the template is updated.
+    vid: "8310d469-4b83-4df8-aae6-be6da6bb063d",
+    // Pit scouting
+    pit: [
+        {
+            name: "team_info",
+            type: "section",
+            prompt: "Team Info"
+        },
+        {
+            name: "team_number",
+            type: "text",
+            prompt: "Team Number",
+            numeric: true,
+            length: 4,
+        },
+        {
+            name: "comments",
+            type: "text",
+            prompt: "Additional Comments."
+        }
+    ],
+    // Match scouting
+    match: [
+        {
+            name: "match_info",
+            type: "section",
+            prompt: "Match Info"
+        },
+        {
+            name: "match_number",
+            type: "text",
+            prompt: "Match Number",
+            numeric: true,
+        },
+        {
+            name: "team_number",
+            type: "text",
+            prompt: "Team Number",
+            numeric: true,
+            length: 4,
+        },
+        {
+            name: "autonomous_section",
+            type: "section",
+            prompt: "Autonomous"
+        },
+        {
+            name: "cone_low_auto",
+            type: "counter",
+            prompt: "Cone Low"
+        },
+        {
+            name: "cone_mid_auto",
+            type: "counter",
+            prompt: "Cone Mid"
+        },
+        {
+            name: "cone_high_auto",
+            type: "counter",
+            prompt: "Cone High"
+        },
+        {
+            type: "spacer",
+        },
+        {
+            name: "cube_low_auto",
+            type: "counter",
+            prompt: "Cube Low"
+        },
+        {
+            name: "cube_mid_auto",
+            type: "counter",
+            prompt: "Cube Mid"
+        },
+        {
+            name: "cube_high_auto",
+            type: "counter",
+            prompt: "Cube High"
+        },
+        {
+            type: "spacer",
+        },
+        {
+            name: "docked_auto",
+            type: "checkbox",
+            prompt: "Touching Charge Station (DOCKED)",
+            excludes: [
+                "engaged_auto"
+            ]
+        },
+        {
+            name: "engaged_auto",
+            type: "checkbox",
+            prompt: "Level on Charge Station (ENGAGED)",
+            excludes: [
+                "docked_auto"
+            ]
+        },
+        {
+            type: "spacer",
+        },
+        {
+            name: "mobility",
+            type: "checkbox",
+            prompt: "Left Community (MOBILITY)"
+        },
+        {
+            name: "teleop_section",
+            type: "section",
+            prompt: "Teleop"
+        },
+        {
+            name: "cone_low_teleop",
+            type: "counter",
+            prompt: "Cone Low"
+        },
+        {
+            name: "cone_mid_teleop",
+            type: "counter",
+            prompt: "Cone Mid"
+        },
+        {
+            name: "cone_high_teleop",
+            type: "counter",
+            prompt: "Cone High"
+        },
+        {
+            type: "spacer",
+        },
+        {
+            name: "cube_low_teleop",
+            type: "counter",
+            prompt: "Cube Low"
+        },
+        {
+            name: "cube_mid_teleop",
+            type: "counter",
+            prompt: "Cube Mid"
+        },
+        {
+            name: "cube_high_teleop",
+            type: "counter",
+            prompt: "Cube High"
+        },
+        {
+            type: "spacer",
+        },
+        {
+            name: "docked_teleop",
+            type: "checkbox",
+            prompt: "Touching Charge Station (DOCKED)",
+            excludes: [
+                "engaged_teleop",
+                "parked_teleop",
+            ]
+        },
+        {
+            name: "engaged_teleop",
+            type: "checkbox",
+            prompt: "Level on Charge Station (ENGAGED)",
+            excludes: [
+                "docked_teleop",
+                "parked_teleop",
+            ]
+        },
+        {
+            name: "parked_teleop",
+            type: "checkbox",
+            prompt: "Within community but not docked (PARKED)",
+            excludes: [
+                "docked_teleop",
+                "engaged_teleop",
+            ]
+        },
+        {
+            name: "comments",
+            type: "text",
+            prompt: "Additional Comments.",
+            multiline: true,
+        }
+    ]
+}

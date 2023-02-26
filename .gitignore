@@ -10,6 +10,9 @@
 .svn/
 migrate_working_dir/
 
+# Private key
+.env
+
 # IntelliJ related
 *.iml
 *.ipr
