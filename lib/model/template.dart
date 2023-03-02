@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:spartan_scout/provider/template_provider.dart';
 import 'package:uuid/uuid.dart';
 
 part 'template.freezed.dart';
@@ -11,7 +13,8 @@ class Template with _$Template {
   const Template._();
   const factory Template({
     required String name,
-    required String vid,
+    required String uuid,
+    required int version,
     required List<TemplateEntry> pit,
     required List<TemplateEntry> match,
   }) = _Template;
@@ -19,7 +22,8 @@ class Template with _$Template {
   ScoutingData newScoutingData(ScoutingType type) {
     return ScoutingData(
         uuid: uuidGen.v1(),
-        templateVid: vid,
+        templateUuid: uuid,
+        templateVersion: version,
         type: type,
         created: DateTime.now(),
         updated: DateTime.now(),
@@ -43,23 +47,75 @@ class ScoutingData with _$ScoutingData {
   const ScoutingData._();
   factory ScoutingData({
     required String uuid,
-    required String templateVid,
+    required String templateUuid,
+    required int templateVersion,
     required ScoutingType type,
     required DateTime created,
     required DateTime updated,
+    DateTime? storedAt,
     required List<TemplateEntry> data,
   }) = _ScoutingData;
 
   factory ScoutingData.fromJson(Map<String, dynamic> json) =>
       _$ScoutingDataFromJson(json);
 
+  static Future<ScoutingData> fromSimpleJson(Map<String, dynamic> simpleData, Ref ref) async {
+    final templateUuid = simpleData["templateUuid"];
+    final templateVersion = simpleData["templateVersion"];
+    final type = ScoutingType.values.where((e) => e.name == simpleData["type"]).first;
+    final templates = (await ref.read(templatesProvider.future)).values.where((e) => e.uuid == templateUuid && e.version == templateVersion);
+    late final Template template;
+    if (templates.isEmpty) {
+      template = await ref.read(templatesProvider.notifier).fetchTemplate(
+        uuid: templateUuid,
+        version: templateVersion,
+      );
+    } else {
+      template = templates.first;
+    }
+
+    final data = template.newScoutingData(type);
+    data.uuid = simpleData["uuid"];
+    data.templateUuid = templateUuid;
+    data.templateVersion = templateVersion;
+    data.type = type;
+    data.created = DateTime.fromMillisecondsSinceEpoch(simpleData["created"]);
+    data.updated = DateTime.fromMillisecondsSinceEpoch(simpleData["updated"]);
+    if (simpleData["storedAt"] != null) {
+      data.storedAt = DateTime.fromMillisecondsSinceEpoch(simpleData["storedAt"]);
+    }
+
+    final List<TemplateEntry> entries = [];
+    for (final entry in data.data) {
+      if (entry.name != null) {
+        final value = simpleData["data"][entry.name];
+        if (value != null) {
+          if (entry is TextEntry) {
+            entry.value = value.toString();
+          } else if (entry is CheckboxEntry) {
+            entry.value = value;
+          } else if (entry is CounterEntry) {
+            entry.value = value;
+          }
+        }
+      }
+      entries.add(entry);
+    }
+    data.data = entries;
+
+    return data;
+  }
+
   Map<String, Object?> toJsonSimple() {
     return {
       "uuid": uuid,
-      "templateVid": templateVid,
+      "templateUuid": templateUuid,
+      "templateVersion": templateVersion,
       "type": type.name,
-      "created": created,
-      "updated": updated,
+      "created": created.millisecondsSinceEpoch,
+      "updated": updated.millisecondsSinceEpoch,
+      if (storedAt != null)
+        "storedAt": storedAt!.millisecondsSinceEpoch,
       "data": {
         for (final entry
             in data.map((e) => e.toJson()).where((e) => e["value"] != null))

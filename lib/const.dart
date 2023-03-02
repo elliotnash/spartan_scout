@@ -1,6 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
+
+// HTTP Constants
+const kBaseUrl = "http://localhost:8080";
 
 // Copied from flutter sdk
 const kDefaultNavBarBackgroundAlpha = 200;

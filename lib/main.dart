@@ -134,9 +134,9 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
               CupertinoIcons.add,
               // color: CupertinoColors.label,
             ),
-            onPressed: () {
+            onPressed: () async {
               if (_selectedIndex != 2) {
-                final scoutingData = ref.read(selectedTemplateProvider).requireValue.newScoutingData(_selectedIndex == 0 ? ScoutingType.pit : ScoutingType.match);
+                final scoutingData = (await ref.read(templatesProvider.notifier).get()).newScoutingData(_selectedIndex == 0 ? ScoutingType.pit : ScoutingType.match);
                 Navigator.of(context).push(
                   CupertinoPageRoute(
                     builder: (BuildContext context) {

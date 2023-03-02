@@ -21,7 +21,7 @@ class ScoutingPage extends StatefulHookConsumerWidget {
 class _ScoutingPageState extends ConsumerState<ScoutingPage> {
   @override
   Widget build(BuildContext context) {
-    final template = ref.watch(selectedTemplateProvider);
+    final template = ref.watch(templatesProvider);
     final data = ref.watch(scoutingDataListProvider(widget.type));
 
     if (template.hasValue && data.hasValue) {

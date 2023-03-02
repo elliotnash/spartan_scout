@@ -11,3 +11,6 @@ extension Capitalize on String {
     return result;
   }
 }
+
+DateTime dateTimeFromEpoch(int int) => DateTime.fromMillisecondsSinceEpoch(int);
+int dateTimeToEpoch(DateTime time) => time.millisecondsSinceEpoch;

@@ -201,7 +201,10 @@ class _CheckboxWidgetState extends State<CheckboxWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            child: Text(widget.entry.prompt),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text(widget.entry.prompt),
+            ),
           ),
           CupertinoSwitch(
               value: widget.entry.value,
