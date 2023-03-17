@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
 // HTTP Constants
+//const kBaseUrl = "https://scout.elliotnash.org";
 const kBaseUrl = "http://localhost:8080";
 
 // Copied from flutter sdk

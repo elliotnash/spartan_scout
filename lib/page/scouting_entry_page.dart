@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spartan_scout/const.dart';
 import 'package:spartan_scout/model/template.dart';
 import 'package:spartan_scout/provider/scouting_data_provider.dart';
-import 'package:spartan_scout/util.dart';
+import 'package:spartan_scout/util/util.dart';
 import 'package:spartan_scout/widgets/cupertino_section.dart';
 import 'package:spartan_scout/widgets/fading_navbar.dart';
 
@@ -224,8 +224,6 @@ class CounterWidget extends StatefulWidget {
   final CounterEntry entry;
   const CounterWidget(this.entry, {super.key});
 
-  final maxValue = 9999;
-
   @override
   State<CounterWidget> createState() => _CounterWidgetState();
 }
@@ -239,6 +237,7 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final maxValue = widget.entry.maxValue ?? 9999;
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 6, top: 2, bottom: 2),
       child: Row(
@@ -268,10 +267,10 @@ class _CounterWidgetState extends State<CounterWidget> {
               ),
               CupertinoButton(
                 padding: EdgeInsets.zero,
-                onPressed: widget.entry.value == widget.maxValue
+                onPressed: widget.entry.value == maxValue
                     ? null
                     : () {
-                        if (widget.entry.value! < widget.maxValue) {
+                        if (widget.entry.value! < maxValue) {
                           setState(() {
                             widget.entry.value = widget.entry.value! + 1;
                           });

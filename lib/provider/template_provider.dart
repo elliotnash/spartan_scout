@@ -38,7 +38,7 @@ class Templates extends _$Templates {
     // return {for (var template in templates) template.name: template};
   }
 
-  Future<Template> get({String? uuid, Int? version}) async {
+  Future<Template> get({String? uuid, int? version}) async {
     final key = (uuid != null && version != null) ? "$uuid:$version" : "default";
     final db = await ref.read(scoutingDatabaseProvider.future);
     final data = await store.record(key).get(db);
@@ -48,7 +48,7 @@ class Templates extends _$Templates {
     return fetchTemplate(uuid: uuid, version: version);
   }
 
-  Future<Template> fetchTemplate({String? uuid, Int? version}) async {
+  Future<Template> fetchTemplate({String? uuid, int? version}) async {
     final res = await ref.read(scoutingDioProvider).get(
       "$kBaseUrl/template",
       queryParameters: {

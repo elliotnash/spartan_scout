@@ -41,21 +41,24 @@ class CupertinoSection extends StatelessWidget {
             color: CupertinoDynamicColor.resolve(CupertinoColors.secondarySystemGroupedBackground, context),
           ),
           margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              for (int i=0; i<children.length; i++)
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: (i<children.length-1) ? BorderSide(
-                        width: 0.0,
-                        color: CupertinoDynamicColor.resolve(CupertinoColors.separator, context),
-                      ) : BorderSide.none,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Column(
+              children: [
+                for (int i=0; i<children.length; i++)
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: (i<children.length-1) ? BorderSide(
+                          width: 0.0,
+                          color: CupertinoDynamicColor.resolve(CupertinoColors.separator, context),
+                        ) : BorderSide.none,
+                      ),
                     ),
+                    child: children[i],
                   ),
-                  child: children[i],
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:another_flushbar/flushbar.dart';
+import 'package:fl_toast/fl_toast.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,8 +11,11 @@ import 'package:spartan_scout/model/template.dart';
 import 'package:spartan_scout/page/scouting_entry_page.dart';
 import 'package:spartan_scout/page/scouting_page.dart';
 import 'package:spartan_scout/page/settings_page.dart';
+import 'package:spartan_scout/provider/flushbar_provider.dart';
 import 'package:spartan_scout/provider/template_provider.dart';
+import 'package:spartan_scout/util/util.dart';
 import 'package:spartan_scout/widgets/fading_navbar.dart';
+import 'package:spartan_scout/widgets/snackbar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +40,9 @@ class SpartanScout extends StatelessWidget {
         child: const CupertinoApp(
           useInheritedMediaQuery: true,
           title: 'Spartan Scout',
-          home: Home(),
+          home: ToastProvider(
+            child: Home(),
+          ),
         ),
       ),
     );
@@ -57,6 +64,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   bool _animatingPage = false;
   int _selectedIndex = 0;
   int _previousIndex = 0;
+
+  Flushbar? flushbar;
 
   late AnimationController _trailingController;
   late CurvedAnimation _trailingAnimation;
@@ -110,6 +119,41 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(flushbarMessageProvider, (previous, next) {
+      if (next != null) {
+        flushbar?.dismiss();
+        flushbar = Flushbar(
+          padding: EdgeInsets.zero,
+          backgroundColor: CupertinoTheme.of(context).barBackgroundColor,
+          // endOffset: Offset(0, -0.16),
+          barBlur: 10,
+          borderRadius: BorderRadius.circular(10),
+          boxShadows: [
+            OutlineBoxShadow(
+              color: CupertinoDynamicColor.resolve(CupertinoColors.systemGrey, context).withAlpha(20),
+              blurRadius: 2,
+            ),
+          ],
+          margin: const EdgeInsets.symmetric(horizontal: 8),
+          messageText: Center(
+            child: Text(
+              next,
+              style: CupertinoTheme.of(context).textTheme.textStyle,
+            ),
+          ),
+          onStatusChanged: (FlushbarStatus? status) {
+            if (status == FlushbarStatus.DISMISSED) {
+              ref.read(flushbarMessageProvider.notifier).set(null);
+            }
+          },
+          animationDuration: const Duration(milliseconds: 250),
+        )..show(context);
+      } else {
+        flushbar?.dismiss();
+        flushbar = null;
+      }
+    });
+
     return CupertinoPageScaffold(
       backgroundColor: CupertinoDynamicColor.resolve(CupertinoColors.systemGroupedBackground, context),
       navigationBar: CupertinoFadingNavigationBar(
@@ -123,7 +167,8 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
             CupertinoIcons.gear,
           ),
           onPressed: () {
-            Navigator.of(context).push(SettingsPage.route());
+            //Navigator.of(context).push(SettingsPage.route());
+            showSnackbar(Text("Hi"));
           },
         ),
         trailing: FadeTransition(

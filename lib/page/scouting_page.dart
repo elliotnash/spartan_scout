@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spartan_scout/const.dart';
 import 'package:spartan_scout/model/template.dart';
@@ -6,6 +8,7 @@ import 'package:spartan_scout/page/scouting_entry_page.dart';
 import 'package:spartan_scout/provider/scouting_data_provider.dart';
 import 'package:spartan_scout/provider/template_provider.dart';
 import 'package:spartan_scout/widgets/cupertino_section.dart';
+import 'package:spartan_scout/widgets/safearea_refresh_indicator.dart';
 
 class ScoutingPage extends StatefulHookConsumerWidget {
   final ScoutingType type;
@@ -29,6 +32,14 @@ class _ScoutingPageState extends ConsumerState<ScoutingPage> {
       return CupertinoScrollbar(
         child: CustomScrollView(
           slivers: [
+            CupertinoSliverRefreshControl(
+              onRefresh: () async {
+                for (final type in ScoutingType.values) {
+                  ref.refresh(scoutingDataListProvider(type));
+                }
+              },
+              builder: buildSafeAreaRefreshIndicator,
+            ),
             SliverPadding(
                 padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top)
             ),
@@ -66,24 +77,51 @@ class ScoutingDataWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //TODO make work
-    final teamNumber = entry.data.where((e) => e.name == "team_number" && e is TextEntry).toList();
+    // final teamNumber = entry.data.where((e) => e.name == "team_number" && e is TextEntry).toList();
     // final natNumber = entry.data.where((e) => e.name == "team_number" && e is TextEntry).toList();
     // return Text(teamNumber.isNotEmpty ? (teamNumber[0] as TextEntry).value ?? "BAD" : "NOO");
-    return SizedBox(
-      width: double.infinity,
-      height: kSettingsEntryHeight,
-      child: CupertinoButton(
-        padding: EdgeInsets.zero,
-        child: Text(teamNumber.isNotEmpty ? (teamNumber[0] as TextEntry).value ?? "BAD" : "NOO"),
-        onPressed: () {
-          Navigator.of(context).push(
-            CupertinoPageRoute(
-              builder: (BuildContext context) {
-                return ScoutingEntryPage(data: entry);
-              },
+    return SwipeActionCell(
+      key: ObjectKey(entry),
+      backgroundColor: Colors.transparent,
+      trailingActions: [
+        SwipeAction(
+          title: "delete",
+          widthSpace: 84,
+          performsFirstActionWithFullSwipe: true,
+          onTap: (CompletionHandler handler) async {
+            await handler(true);
+          },
+          color: CupertinoDynamicColor.resolve(CupertinoColors.destructiveRed, context),
+        )
+      ],
+      child: SizedBox(
+        width: double.infinity,
+        height: kSettingsEntryHeight,
+        child: Row(
+          children: [
+            Container(
+              width: 4,
+              color: entry.storedAt == null
+                ? CupertinoDynamicColor.resolve(CupertinoColors.destructiveRed, context)
+                : CupertinoDynamicColor.resolve(CupertinoColors.activeGreen, context),
             ),
-          );
-        },
+            Expanded(
+              child: CupertinoButton(
+                padding: EdgeInsets.zero,
+                child: Text((entry.data.get("team_number") as TextEntry).value ?? ""),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (BuildContext context) {
+                        return ScoutingEntryPage(data: entry);
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

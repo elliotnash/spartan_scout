@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spartan_scout/provider/template_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:collection/collection.dart';
 
 part 'template.freezed.dart';
 part 'template.g.dart';
@@ -15,8 +16,8 @@ class Template with _$Template {
     required String name,
     required String uuid,
     required int version,
-    required List<TemplateEntry> pit,
-    required List<TemplateEntry> match,
+    required TemplateTab pit,
+    required TemplateTab match,
   }) = _Template;
 
   ScoutingData newScoutingData(ScoutingType type) {
@@ -28,7 +29,7 @@ class Template with _$Template {
         created: DateTime.now(),
         updated: DateTime.now(),
         data: [
-          for (final entry in type == ScoutingType.pit ? pit : match)
+          for (final entry in (type == ScoutingType.pit ? pit : match).entries)
             entry.copyWith()
         ]);
   }
@@ -38,6 +39,18 @@ class Template with _$Template {
 }
 
 enum ScoutingType { pit, match }
+
+@freezed
+class TemplateTab with _$TemplateTab {
+  const TemplateTab._();
+  const factory TemplateTab({
+    required String title,
+    required List<TemplateEntry> entries,
+  }) = _TemplateTab;
+
+  factory TemplateTab.fromJson(Map<String, Object?> json) =>
+      _$TemplateTabFromJson(json);
+}
 
 @Freezed(
   addImplicitFinal: false,
@@ -185,6 +198,7 @@ class TemplateEntry with _$TemplateEntry {
     required String name,
     required EntryType type,
     required String prompt,
+    int? maxValue,
     int? value,
     @Default(false) bool required,
   }) = CounterEntry;
@@ -198,4 +212,10 @@ class TemplateEntry with _$TemplateEntry {
 
   factory TemplateEntry.fromJson(Map<String, Object?> json) =>
       _$TemplateEntryFromJson(json);
+}
+
+extension TemplateEntryList on List<TemplateEntry> {
+  TemplateEntry? get(String name) {
+    return firstWhereOrNull((e) => e.name == name);
+  }
 }
