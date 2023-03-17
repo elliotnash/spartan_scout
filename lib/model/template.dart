@@ -69,6 +69,10 @@ class ScoutingData with _$ScoutingData {
     required List<TemplateEntry> data,
   }) = _ScoutingData;
 
+  bool isSynced() {
+    return storedAt == null ? false : storedAt!.isAfter(updated);
+  }
+
   factory ScoutingData.fromJson(Map<String, dynamic> json) =>
       _$ScoutingDataFromJson(json);
 

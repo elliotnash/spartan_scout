@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 //const kBaseUrl = "https://scout.elliotnash.org";
 const kBaseUrl = "http://localhost:8080";
 
+const kRetryInterval = Duration(seconds: 15);
+
 // Copied from flutter sdk
 const kDefaultNavBarBackgroundAlpha = 200;
 const kNavBarShowLargeTitleThreshold = 10.0;

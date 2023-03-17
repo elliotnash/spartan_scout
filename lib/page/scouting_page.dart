@@ -29,6 +29,7 @@ class _ScoutingPageState extends ConsumerState<ScoutingPage> {
 
     if (template.hasValue && data.hasValue) {
       final dataList = data.requireValue;
+      dataList.sort((a, b) => b.updated.compareTo(a.updated));
       return CupertinoScrollbar(
         child: CustomScrollView(
           slivers: [
@@ -70,12 +71,12 @@ class _ScoutingPageState extends ConsumerState<ScoutingPage> {
   }
 }
 
-class ScoutingDataWidget extends StatelessWidget {
+class ScoutingDataWidget extends HookConsumerWidget {
   final ScoutingData entry;
   const ScoutingDataWidget(this.entry, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     //TODO make work
     // final teamNumber = entry.data.where((e) => e.name == "team_number" && e is TextEntry).toList();
     // final natNumber = entry.data.where((e) => e.name == "team_number" && e is TextEntry).toList();
@@ -89,7 +90,34 @@ class ScoutingDataWidget extends StatelessWidget {
           widthSpace: 84,
           performsFirstActionWithFullSwipe: true,
           onTap: (CompletionHandler handler) async {
-            await handler(true);
+            final delete = await showCupertinoDialog(
+              context: context,
+              builder: (context) => CupertinoAlertDialog(
+                title: const Text("Delete Entry?"),
+                content: const Text("Entry will be lost!"),
+                actions: [
+                  CupertinoDialogAction(
+                    isDefaultAction: true,
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: const Text("Cancel"),
+                  ),
+                  CupertinoDialogAction(
+                    isDestructiveAction: true,
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    child: const Text("Delete"),
+                  ),
+                ],
+              ),
+            );
+            if (delete && await ref.read(scoutingDataListProvider(entry.type).notifier).delete(entry.uuid)) {
+              await handler(true);
+            } else {
+              await handler(false);
+            }
           },
           color: CupertinoDynamicColor.resolve(CupertinoColors.destructiveRed, context),
         )
@@ -101,9 +129,9 @@ class ScoutingDataWidget extends StatelessWidget {
           children: [
             Container(
               width: 4,
-              color: entry.storedAt == null
-                ? CupertinoDynamicColor.resolve(CupertinoColors.destructiveRed, context)
-                : CupertinoDynamicColor.resolve(CupertinoColors.activeGreen, context),
+              color: entry.isSynced()
+                  ? CupertinoDynamicColor.resolve(CupertinoColors.activeGreen, context)
+                  : CupertinoDynamicColor.resolve(CupertinoColors.destructiveRed, context),
             ),
             Expanded(
               child: CupertinoButton(
