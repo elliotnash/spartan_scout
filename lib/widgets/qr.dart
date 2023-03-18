@@ -1,27 +1,27 @@
 
-//        CustomPaint(
-//           painter: QrPainter(
-//               data: "HI",
-//               //data: "Welcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to hi hi hi hi hi hi",
-//               options: const QrOptions(
-//                 shapes: QrShapes(
-//                     darkPixel: CirclePixelShape(
-//                       connectX: true,
-//                       connectY: false,
-//                       fillet: true,
-//                       size: 0.9
-//                     ),
-//                     frame: QrFrameShapeRoundCorners(cornerFraction: .25),
-//                     ball: QrBallShapeRoundCorners(cornerFraction: .25)),
-//                 colors: QrColors(
-//                     dark: QrColorLinearGradient(colors: [
-//                       Color.fromARGB(255, 60, 60, 160),
-//                       Color.fromARGB(255, 5, 40, 100),
-//                     ], orientation: GradientOrientation.leftDiagonal),
-//                     background: QrColorSolid(Color(0x00000000))),
-//               )),
-//           size: const Size(350, 350),
-//         ),
+       // CustomPaint(
+       //    painter: QrPainter(
+       //        data: "HI",
+       //        //data: "Welcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to hi hi hi hi hi hi",
+       //        options: const QrOptions(
+       //          shapes: QrShapes(
+       //              darkPixel: CirclePixelShape(
+       //                connectX: true,
+       //                connectY: false,
+       //                fillet: true,
+       //                size: 0.9
+       //              ),
+       //              frame: QrFrameShapeRoundCorners(cornerFraction: .25),
+       //              ball: QrBallShapeRoundCorners(cornerFraction: .25)),
+       //          colors: QrColors(
+       //              dark: QrColorLinearGradient(colors: [
+       //                Color.fromARGB(255, 60, 60, 160),
+       //                Color.fromARGB(255, 5, 40, 100),
+       //              ], orientation: GradientOrientation.leftDiagonal),
+       //              background: QrColorSolid(Color(0x00000000))),
+       //        )),
+       //    size: const Size(350, 350),
+       //  ),
 
 import 'dart:math';
 import 'dart:ui';

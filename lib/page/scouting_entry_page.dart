@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:spartan_scout/const.dart';
@@ -336,7 +337,7 @@ class _TextWidgetState extends State<TextWidget> {
                 borderRadius: const BorderRadius.all(Radius.circular(5.0)),
               ),
               keyboardType: widget.entry.numeric
-                  ? Platform.isIOS
+                  ? !kIsWeb && Platform.isIOS
                       ? const TextInputType.numberWithOptions(signed: true)
                       : TextInputType.number
                   : null,
@@ -372,7 +373,7 @@ class _TextWidgetState extends State<TextWidget> {
                   borderRadius: const BorderRadius.all(Radius.circular(5.0)),
                 ),
                 keyboardType: widget.entry.numeric
-                    ? Platform.isIOS
+                    ? !kIsWeb && Platform.isIOS
                         ? const TextInputType.numberWithOptions(signed: true)
                         : TextInputType.number
                     : null,

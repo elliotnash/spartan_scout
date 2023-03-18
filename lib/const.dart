@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
 // HTTP Constants
-//const kBaseUrl = "https://scout.elliotnash.org";
-const kBaseUrl = "http://localhost:8080";
+const kBaseUrl = "https://scout.elliotnash.org/api";
+//const kBaseUrl = "http://localhost:8090/api";
 
 const kRetryInterval = Duration(seconds: 15);
 

@@ -20,6 +20,15 @@ class Template with _$Template {
     required TemplateTab match,
   }) = _Template;
 
+  TemplateTab? tab(ScoutingType type) {
+    if (type == ScoutingType.pit) {
+      return pit;
+    } else if (type == ScoutingType.match) {
+      return match;
+    }
+    return null;
+  }
+
   ScoutingData newScoutingData(ScoutingType type) {
     return ScoutingData(
         uuid: uuidGen.v1(),
@@ -28,6 +37,7 @@ class Template with _$Template {
         type: type,
         created: DateTime.now(),
         updated: DateTime.now(),
+        exported: false,
         data: [
           for (final entry in (type == ScoutingType.pit ? pit : match).entries)
             entry.copyWith()
@@ -65,12 +75,23 @@ class ScoutingData with _$ScoutingData {
     required ScoutingType type,
     required DateTime created,
     required DateTime updated,
+    @Default(false) bool exported,
     DateTime? storedAt,
     required List<TemplateEntry> data,
   }) = _ScoutingData;
 
   bool isSynced() {
     return storedAt == null ? false : storedAt!.isAfter(updated);
+  }
+
+  String displayName(String format) {
+    return format.replaceAllMapped(RegExp(r'%(.*?)%'), (match) {
+      final entry = data.get(match.group(1)!);
+      if (entry != null && entry is TextEntry) {
+        return entry.value ?? "";
+      }
+      return "";
+    });
   }
 
   factory ScoutingData.fromJson(Map<String, dynamic> json) =>

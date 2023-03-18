@@ -36,9 +36,19 @@ class ScoutingDataList extends _$ScoutingDataList {
           "$kBaseUrl/${type.name}");
       List<dynamic> data = res.data;
       state = AsyncData([
+        for (final entry in await future)
+          if (!entry.isSynced())
+            entry,
         for (final Map<String, dynamic> entry in data)
-          await _save(await ScoutingData.fromSimpleJson(entry, ref))
+          await _save(await ScoutingData.fromSimpleJson(entry, ref)),
       ]);
+      final db = await ref.read(scoutingDatabaseProvider.future);
+      for (final record in await store.find(db)) {
+        final entry = ScoutingData.fromJson(record.value);
+        if (!state.value!.contains(entry)) {
+          await store.record(entry.uuid).delete(db);
+        }
+      }
     } catch (e) {
       _onError(e, alertError);
     }
@@ -71,10 +81,9 @@ class ScoutingDataList extends _$ScoutingDataList {
     }
     if (alert) {
       showSnackbar(Text(message));
-    } else {
-      print(type);
-      print(e);
     }
+    print(type);
+    print(e);
   }
 
   Future<void> _post(ScoutingData data, {bool alertError = true}) async {
@@ -107,6 +116,9 @@ class ScoutingDataList extends _$ScoutingDataList {
           data: jsonEncode({"uuid": uuid}),
       );
       state = AsyncData([...((await future).where((e) => e.uuid != uuid))]);
+
+      final db = await ref.read(scoutingDatabaseProvider.future);
+      await store.record(uuid).delete(db);
       return true;
     } catch (e) {
       _onError(e, true);

@@ -12,7 +12,6 @@ import 'package:spartan_scout/page/scouting_page.dart';
 import 'package:spartan_scout/page/settings_page.dart';
 import 'package:spartan_scout/provider/template_provider.dart';
 import 'package:spartan_scout/widgets/fading_navbar.dart';
-import 'package:spartan_scout/widgets/snackbar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -235,11 +234,11 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                   ),
                   InkblobBarItem(
                     title: Text(
-                      'Export',
+                      'Import',
                       style: itemStyle,
                     ),
-                    filledIcon: const Icon(CupertinoIcons.share_solid),
-                    emptyIcon: const Icon(CupertinoIcons.share),
+                    filledIcon: const Icon(CupertinoIcons.square_arrow_down_fill),
+                    emptyIcon: const Icon(CupertinoIcons.square_arrow_down),
                     color: itemColor,
                   ),
                 ],
