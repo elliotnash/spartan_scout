@@ -63,7 +63,7 @@ class _ScoutingEntryPageState extends ConsumerState<ScoutingEntryPage> {
           context: context,
           builder: (context) => CupertinoAlertDialog(
             title: const Text("Exit?"),
-            content: const Text("Record data will be discarded!"),
+            content: const Text("Changes will be discarded!"),
             actions: [
               CupertinoDialogAction(
                 isDefaultAction: true,
