@@ -97,53 +97,6 @@ class ScoutingData with _$ScoutingData {
   factory ScoutingData.fromJson(Map<String, dynamic> json) =>
       _$ScoutingDataFromJson(json);
 
-  static Future<ScoutingData> fromSimpleJson(Map<String, dynamic> simpleData, Ref ref) async {
-    final templateUuid = simpleData["templateUuid"];
-    final templateVersion = simpleData["templateVersion"];
-    final type = ScoutingType.values.where((e) => e.name == simpleData["type"]).first;
-    final templates = (await ref.read(templatesProvider.future)).values.where((e) => e.uuid == templateUuid && e.version == templateVersion);
-    late final Template template;
-    if (templates.isEmpty) {
-      template = await ref.read(templatesProvider.notifier).fetchTemplate(
-        uuid: templateUuid,
-        version: templateVersion,
-      );
-    } else {
-      template = templates.first;
-    }
-
-    final data = template.newScoutingData(type);
-    data.uuid = simpleData["uuid"];
-    data.templateUuid = templateUuid;
-    data.templateVersion = templateVersion;
-    data.type = type;
-    data.created = DateTime.fromMillisecondsSinceEpoch(simpleData["created"]);
-    data.updated = DateTime.fromMillisecondsSinceEpoch(simpleData["updated"]);
-    if (simpleData["storedAt"] != null) {
-      data.storedAt = DateTime.fromMillisecondsSinceEpoch(simpleData["storedAt"]);
-    }
-
-    final List<TemplateEntry> entries = [];
-    for (final entry in data.data) {
-      if (entry.name != null) {
-        final value = simpleData["data"][entry.name];
-        if (value != null) {
-          if (entry is TextEntry) {
-            entry.value = value.toString();
-          } else if (entry is CheckboxEntry) {
-            entry.value = value;
-          } else if (entry is CounterEntry) {
-            entry.value = value;
-          }
-        }
-      }
-      entries.add(entry);
-    }
-    data.data = entries;
-
-    return data;
-  }
-
   Map<String, Object?> toJsonSimple() {
     return {
       "uuid": uuid,

@@ -2,11 +2,14 @@ import 'dart:ui';
 
 import 'package:fl_toast/fl_toast.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:inkblob_navigation_bar/inkblob_navigation_bar.dart';
+import 'package:safe_area_insets/safe_area_insets.dart';
 import 'package:spartan_scout/model/template.dart';
+import 'package:spartan_scout/page/import_page.dart';
 import 'package:spartan_scout/page/scouting_entry_page.dart';
 import 'package:spartan_scout/page/scouting_page.dart';
 import 'package:spartan_scout/page/settings_page.dart';
@@ -37,7 +40,7 @@ class SpartanScout extends StatelessWidget {
           useInheritedMediaQuery: true,
           title: 'Spartan Scout',
           home: ToastProvider(
-            child: Home(),
+            child: kIsWeb ? WebSafeAreaInsets(child: Home()) : Home(),
           ),
         ),
       ),
@@ -55,6 +58,8 @@ class Home extends StatefulHookConsumerWidget {
 class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
   static const _transitionDuration = Duration(milliseconds: 270);
   static const _transitionCurve = Curves.easeInOutExpo;
+
+  final ImportPageController _importController = ImportPageController();
 
   late PageController _pageController;
   bool _animatingPage = false;
@@ -98,6 +103,12 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
         if (previousShowTrailing != showTrailing) {
           _trailingController.animateTo(showTrailing ? 1 : 0);
         }
+        if (!showTrailing) {
+          _importController.setActive();
+        }
+        if (!previousShowTrailing) {
+          _importController.setInactive();
+        }
         _pageController
             .animateToPage(
           index,
@@ -140,13 +151,15 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
             onPressed: () async {
               if (_selectedIndex != 2) {
                 final scoutingData = (await ref.read(templatesProvider.notifier).get()).newScoutingData(_selectedIndex == 0 ? ScoutingType.pit : ScoutingType.match);
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (BuildContext context) {
-                      return ScoutingEntryPage(data: scoutingData);
-                    },
-                  ),
-                );
+                if (mounted) {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (BuildContext context) {
+                        return ScoutingEntryPage(data: scoutingData);
+                      },
+                    ),
+                  );
+                }
               }
             },
           ),
@@ -170,12 +183,10 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
       child: PageView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
-        children: const [
-          ScoutingPage(type: ScoutingType.pit),
-          ScoutingPage(type: ScoutingType.match),
-          Center(
-            child: Text("page 3"),
-          ),
+        children: [
+          const ScoutingPage(type: ScoutingType.pit),
+          const ScoutingPage(type: ScoutingType.match),
+          ImportPage(controller: _importController),
         ],
       ),
     );
@@ -185,7 +196,7 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
     final itemStyle = CupertinoTheme.of(context)
         .textTheme
         .textStyle
-        .copyWith(fontSize: 15);
+        .copyWith(fontSize: 14);
     final itemColor = CupertinoTheme.of(context)
         .textTheme
         .textStyle
@@ -203,45 +214,49 @@ class _HomeState extends ConsumerState<Home> with TickerProviderStateMixin {
                   height: 0.2,
                   color: CupertinoDynamicColor.resolve(CupertinoColors.separator, context)
               ),
-              InkblobNavigationBar(
-                showElevation: false,
-                backgroundColor: CupertinoTheme.of(context)
-                    .barBackgroundColor
-                    .withAlpha(236),
-                selectedIndex: _selectedIndex,
-                previousIndex: _previousIndex,
-                onItemSelected: _onItemTapped,
-                items: <InkblobBarItem>[
-                  InkblobBarItem(
-                    title: Text(
-                      'Pit',
-                      style: itemStyle,
+              Container(
+                padding: const EdgeInsets.only(bottom: 8),
+                color: CupertinoTheme.of(context)
+                  .barBackgroundColor
+                  .withAlpha(236),
+                child: InkblobNavigationBar(
+                  showElevation: false,
+                  backgroundColor: Colors.transparent,
+                  selectedIndex: _selectedIndex,
+                  previousIndex: _previousIndex,
+                  onItemSelected: _onItemTapped,
+                  items: <InkblobBarItem>[
+                    InkblobBarItem(
+                      title: Text(
+                        'Pit',
+                        style: itemStyle,
+                      ),
+                      filledIcon: const Icon(CupertinoIcons.wrench_fill),
+                      emptyIcon: const Icon(CupertinoIcons.wrench),
+                      color: itemColor,
                     ),
-                    filledIcon: const Icon(CupertinoIcons.wrench_fill),
-                    emptyIcon: const Icon(CupertinoIcons.wrench),
-                    color: itemColor,
-                  ),
-                  InkblobBarItem(
-                    title: Text(
-                      'Match',
-                      style: itemStyle,
+                    InkblobBarItem(
+                      title: Text(
+                        'Match',
+                        style: itemStyle,
+                      ),
+                      filledIcon: const Icon(
+                          CupertinoIcons.game_controller_solid),
+                      emptyIcon:
+                      const Icon(CupertinoIcons.game_controller),
+                      color: itemColor,
                     ),
-                    filledIcon: const Icon(
-                        CupertinoIcons.game_controller_solid),
-                    emptyIcon:
-                    const Icon(CupertinoIcons.game_controller),
-                    color: itemColor,
-                  ),
-                  InkblobBarItem(
-                    title: Text(
-                      'Import',
-                      style: itemStyle,
+                    InkblobBarItem(
+                      title: Text(
+                        'Import',
+                        style: itemStyle,
+                      ),
+                      filledIcon: const Icon(CupertinoIcons.square_arrow_down_fill),
+                      emptyIcon: const Icon(CupertinoIcons.square_arrow_down),
+                      color: itemColor,
                     ),
-                    filledIcon: const Icon(CupertinoIcons.square_arrow_down_fill),
-                    emptyIcon: const Icon(CupertinoIcons.square_arrow_down),
-                    color: itemColor,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

@@ -1,10 +1,10 @@
 {
-    "name": "spartan_scout",
-    "short_name": "spartan_scout",
+    "name": "Spartan Scout",
+    "short_name": "Spartan Scout",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
-    "theme_color": "#0175C2",
+    "theme_color": "#F7F7F8",
     "description": "Spartan Scout",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,

@@ -4,12 +4,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sembast/sembast.dart';
 import 'package:spartan_scout/const.dart';
 import 'package:spartan_scout/model/template.dart';
 import 'package:spartan_scout/provider/database_provider.dart';
 import 'package:spartan_scout/provider/dio_provider.dart';
+import 'package:spartan_scout/provider/template_provider.dart';
 import 'package:spartan_scout/widgets/snackbar.dart';
 
 part 'scouting_data_provider.g.dart';
@@ -40,7 +42,7 @@ class ScoutingDataList extends _$ScoutingDataList {
           if (!entry.isSynced())
             entry,
         for (final Map<String, dynamic> entry in data)
-          await _save(await ScoutingData.fromSimpleJson(entry, ref)),
+          await _save(await ref.read(templatesProvider.notifier).scoutingDataFromSimpleJson(entry)),
       ]);
       final db = await ref.read(scoutingDatabaseProvider.future);
       for (final record in await store.find(db)) {
@@ -49,8 +51,8 @@ class ScoutingDataList extends _$ScoutingDataList {
           await store.record(entry.uuid).delete(db);
         }
       }
-    } catch (e) {
-      _onError(e, alertError);
+    } catch (e, trace) {
+      _onError(e, trace, alertError);
     }
     // state = AsyncData((await Future.wait(res.data.map((e) => ScoutingData.fromSimpleJson(e, ref)))).toList());
   }
@@ -69,7 +71,7 @@ class ScoutingDataList extends _$ScoutingDataList {
     }
   }
 
-  void _onError(Object e, bool alert) {
+  void _onError(Object e, StackTrace trace, bool alert) {
     String message = e.toString();
     if (e is DioError) {
       final error = e.error;
@@ -82,8 +84,11 @@ class ScoutingDataList extends _$ScoutingDataList {
     if (alert) {
       showSnackbar(Text(message));
     }
-    print(type);
-    print(e);
+    if (kDebugMode) {
+      print(type);
+      print(e);
+      print(trace);
+    }
   }
 
   Future<void> _post(ScoutingData data, {bool alertError = true}) async {
@@ -92,14 +97,14 @@ class ScoutingDataList extends _$ScoutingDataList {
           "$kBaseUrl/${type.name}",
           data: data.toJsonSimple()
       );
-      final newData = await ScoutingData.fromSimpleJson(res.data, ref);
+      final newData = await ref.read(templatesProvider.notifier).scoutingDataFromSimpleJson(res.data);
       state = AsyncData([
         ...((await future).where((e) => e.uuid != data.uuid)),
         newData,
       ]);
       _save(newData);
-    } catch (e) {
-      _onError(e, alertError);
+    } catch (e, trace) {
+      _onError(e, trace, alertError);
     }
   }
 
@@ -120,8 +125,8 @@ class ScoutingDataList extends _$ScoutingDataList {
       final db = await ref.read(scoutingDatabaseProvider.future);
       await store.record(uuid).delete(db);
       return true;
-    } catch (e) {
-      _onError(e, true);
+    } catch (e, trace) {
+      _onError(e, trace, true);
     }
     return false;
   }
