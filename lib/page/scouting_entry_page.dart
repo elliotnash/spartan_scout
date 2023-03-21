@@ -175,6 +175,8 @@ class _ScoutingEntryPageState extends ConsumerState<ScoutingEntryPage> {
       );
     } else if (entry is CounterEntry) {
       return CounterWidget(entry);
+    } else if (entry is SegmentEntry) {
+      return SegmentWidget(entry);
     }
     return Text(entry.name ?? "No name");
   }
@@ -283,6 +285,50 @@ class _CounterWidgetState extends State<CounterWidget> {
               ),
             ],
           )
+        ],
+      ),
+    );
+  }
+}
+
+class SegmentWidget extends StatefulWidget {
+  final SegmentEntry entry;
+  const SegmentWidget(this.entry, {super.key});
+
+  @override
+  State<SegmentWidget> createState() => _SegmentWidgetState();
+}
+
+class _SegmentWidgetState extends State<SegmentWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: kSettingsEntryPadding, top: 10, bottom: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, bottom: 5),
+              child: Text(widget.entry.prompt),
+            ),
+          ),
+          SizedBox(
+            width: 120,
+            child: CupertinoSlidingSegmentedControl(
+              groupValue: widget.entry.value,
+              onValueChanged: (value) {
+                setState(() {
+                  widget.entry.value = value;
+                });
+              },
+              children: widget.entry.segments.map((key, value) => MapEntry(
+                  key,
+                  Text(value)
+              )),
+            ),
+          ),
         ],
       ),
     );

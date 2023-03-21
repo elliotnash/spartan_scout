@@ -120,6 +120,7 @@ enum EntryType {
   section,
   spacer,
   text,
+  segment,
   checkbox,
   counter,
   picture,
@@ -162,6 +163,14 @@ class TemplateEntry with _$TemplateEntry {
     String? value,
     @Default(false) bool required,
   }) = TextEntry;
+
+  factory TemplateEntry.segment({
+    required String name,
+    required EntryType type,
+    required String prompt,
+    required Map<String, String> segments,
+    String? value
+  }) = SegmentEntry;
 
   factory TemplateEntry.checkbox({
     required String name,
