@@ -117,13 +117,16 @@ class ScoutingData with _$ScoutingData {
 }
 
 enum EntryType {
-  section,
-  spacer,
-  text,
-  segment,
-  checkbox,
-  counter,
-  picture,
+  section(valued: false),
+  spacer(valued: false),
+  text(valued: true),
+  segment(valued: true),
+  checkbox(valued: true),
+  counter(valued: true),
+  picture(valued: false);
+
+  const EntryType({required this.valued});
+  final bool valued;
 }
 
 @Freezed(

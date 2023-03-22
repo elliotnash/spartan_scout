@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -129,5 +130,56 @@ class ScoutingDataList extends _$ScoutingDataList {
       _onError(e, trace, true);
     }
     return false;
+  }
+}
+
+extension CsvExport on List<ScoutingData> {
+  String toCsv() {
+    final LinkedHashSet<String> headers = LinkedHashSet();
+    final List<List<String?>> out = [];
+    // populate headers
+    for (final data in this) {
+      for (final entry in data.data) {
+        if (entry.type.valued) {
+          if (entry.name != null) {
+            headers.add(entry.name!);
+          }
+        }
+      }
+    }
+    out.add(headers.toList());
+    // populate data
+    for (final data in this) {
+      final List<String?> outEntry = [];
+      for (final header in headers) {
+        final entry = data.data.get(header);
+
+        if (entry is TextEntry) {
+          outEntry.add(entry.value);
+        } else if (entry is SegmentEntry) {
+          outEntry.add(entry.value);
+        } else if (entry is CheckboxEntry) {
+          outEntry.add(entry.value ? "Y" : "N");
+        } else if (entry is CounterEntry) {
+          outEntry.add(entry.value?.toString());
+        } else {
+          outEntry.add(null);
+        }
+      }
+      out.add(outEntry);
+    }
+    // convert to csv
+    final sb = StringBuffer();
+    for (final entry in out) {
+      entry.asMap().forEach((i, element) {
+        sb.write(element ?? "");
+        if (i < entry.length-1) {
+          sb.write(",");
+        } else {
+          sb.writeln();
+        }
+      });
+    }
+    return sb.toString();
   }
 }

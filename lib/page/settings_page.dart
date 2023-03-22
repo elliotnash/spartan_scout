@@ -1,8 +1,11 @@
-import 'dart:ui';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:spartan_scout/const.dart';
 import 'package:spartan_scout/model/template.dart';
 import 'package:spartan_scout/provider/database_provider.dart';
@@ -10,6 +13,7 @@ import 'package:spartan_scout/provider/scouting_data_provider.dart';
 import 'package:spartan_scout/provider/settings_provider.dart';
 import 'package:spartan_scout/widgets/cupertino_section.dart';
 import 'package:spartan_scout/widgets/fading_navbar.dart';
+import 'package:spartan_scout/widgets/snackbar.dart';
 
 class SettingsPage extends StatefulHookConsumerWidget {
   static CupertinoPageRoute route() {
@@ -91,6 +95,29 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ],
                 ),
                 CupertinoSection(
+                  heading: "Export",
+                  children: [
+                    SettingsButtonEntry(
+                        text: "Export pit scouting CSV",
+                        onPressed: () async {
+                          await _saveCsv(
+                            (await ref.read(scoutingDataListProvider(ScoutingType.pit).future)).toCsv(),
+                            "pit.csv"
+                          );
+                        }
+                    ),
+                    SettingsButtonEntry(
+                      text: "Export match scouting CSV",
+                      onPressed: () async {
+                        await _saveCsv(
+                          (await ref.read(scoutingDataListProvider(ScoutingType.match).future)).toCsv(),
+                          "matches.csv"
+                        );
+                      }
+                    ),
+                  ]
+                ),
+                CupertinoSection(
                   heading: "Advanced",
                   children: [
                     SettingsButtonEntry(
@@ -136,6 +163,29 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     return const Center(
       child: CupertinoActivityIndicator(),
     );
+  }
+
+  Future<void> _saveCsv(String csv, String fileName) async {
+    if (!kIsWeb && Platform.isIOS) {
+      Directory dir = await getApplicationDocumentsDirectory();
+      if (!(await dir.exists())) {
+        await dir.create(recursive: true);
+      }
+      final file = File("${dir.path}/$fileName");
+      file.writeAsBytes(ascii.encode(csv));
+      showSnackbar(const Text("File saved to Documents directory!"));
+    } else {
+      final path = await getSavePath(suggestedName: fileName);
+      if (path == null) {
+        return;
+      }
+      final file = XFile.fromData(
+          ascii.encode(csv),
+          mimeType: 'text/csv',
+          name: fileName
+      );
+      await file.saveTo(path);
+    }
   }
 }
 

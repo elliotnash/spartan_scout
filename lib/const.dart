@@ -27,4 +27,4 @@ const Border kDefaultRoundedBorder = Border(
 
 // App consts
 const kSettingsEntryPadding = 10.0;
-const kSettingsEntryHeight = 40.0;
+const kSettingsEntryHeight = 42.0;
