@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:custom_qr_generator/custom_qr_generator.dart';
@@ -58,6 +59,9 @@ class _SettingsPageState extends ConsumerState<ExportPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final qrSize = min(size.width, size.height)-40;
+
     return CupertinoPageScaffold(
         navigationBar: CupertinoFadingNavigationBar(
           context: context,
@@ -82,26 +86,32 @@ class _SettingsPageState extends ConsumerState<ExportPage> {
               Expanded(
                 child: Align(
                   alignment: const Alignment(0, 0.15),
-                  child: CustomPaint(
-                    painter: QrPainter(
-                        data: jsonEncode(widget.data.toJsonSimple()),
-                        //data: "Welcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to hi hi hi hi hi hi",
-                        options: QrOptions(
-                          shapes: const QrShapes(
-                              darkPixel: CirclePixelShape(
-                                  connectX: true,
-                                  connectY: false,
-                                  fillet: true,
-                                  size: 0.9
-                              ),
-                              frame: QrFrameShapeRoundCorners(cornerFraction: .25),
-                              ball: QrBallShapeRoundCorners(cornerFraction: .25)),
-                          colors: QrColors(
-                            dark: QrColorSolid(CupertinoDynamicColor.resolve(CupertinoColors.label, context)),
-                            background: const QrColorSolid(Color(0x00000000)),
-                          ),
-                        )),
-                    size: const Size(350, 350),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: CupertinoColors.systemBackground.color,
+                    ),
+                    child: CustomPaint(
+                      painter: QrPainter(
+                          data: jsonEncode(widget.data.toJsonSimple()),
+                          //data: "Welcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome to FlutterWelcomeWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to FlutterWelcome Welcome to FlutterWelcome to hi hi hi hi hi hi",
+                          options: QrOptions(
+                            shapes: const QrShapes(
+                                darkPixel: CirclePixelShape(
+                                    connectX: true,
+                                    connectY: false,
+                                    fillet: true,
+                                    size: 0.9
+                                ),
+                                frame: QrFrameShapeRoundCorners(cornerFraction: .25),
+                                ball: QrBallShapeRoundCorners(cornerFraction: .25)),
+                            colors: QrColors(
+                              dark: QrColorSolid(CupertinoColors.label.color),
+                              background: const QrColorSolid(Color(0x00000000)),
+                            ),
+                          )),
+                      size: Size(qrSize, qrSize),
+                    ),
                   ),
                 ),
               ),

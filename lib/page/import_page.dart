@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:spartan_scout/provider/scouting_data_provider.dart';
@@ -64,42 +66,58 @@ class _ImportPageState extends ConsumerState<ImportPage> with AutomaticKeepAlive
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Stack(
-      children: [
-        if (permission)
-          const Center(
-            child: CupertinoActivityIndicator(),
-          ),
-        QRView(
-          key: qrKey,
-          onQRViewCreated: (controller) {
-            this.controller = controller;
-            controller.scannedDataStream.listen((scanData) {
-              if (scanData.code != lastScan) {
-                _onNewData(scanData.code);
-              }
-              lastScan = scanData.code;
-            });
-          },
-          onPermissionSet: (controller, permission) {
-            setState(() {
-              this.permission = permission;
-            });
-          },
+    if (!kIsWeb && Platform.isMacOS) {
+      return MobileScanner(
+        controller: MobileScannerController(
+          detectionSpeed: DetectionSpeed.noDuplicates,
         ),
-        if (!permission)
-          Center(
-            child: CupertinoButton(
-              child: const Text("Grant camera permission"),
-              onPressed: () async {
-                if (!(await Permission.camera.request().isGranted)) {
-                  await openAppSettings();
-                }
-              },
+        onDetect: (capture) {
+          for (final code in capture.barcodes) {
+            if (code.rawValue != lastScan) {
+              _onNewData(code.rawValue);
+            }
+            lastScan = code.rawValue;
+          }
+        },
+      );
+    } else {
+      return Stack(
+        children: [
+          if (permission)
+            const Center(
+              child: CupertinoActivityIndicator(),
             ),
+          QRView(
+            key: qrKey,
+            onQRViewCreated: (controller) {
+              this.controller = controller;
+              controller.scannedDataStream.listen((scanData) {
+                if (scanData.code != lastScan) {
+                  _onNewData(scanData.code);
+                }
+                lastScan = scanData.code;
+              });
+            },
+            onPermissionSet: (controller, permission) {
+              setState(() {
+                this.permission = permission;
+              });
+            },
           ),
-      ],
-    );
+          if (!permission)
+            Center(
+              child: CupertinoButton(
+                child: const Text("Grant camera permission"),
+                onPressed: () async {
+                  if (!(await Permission.camera.request().isGranted)) {
+                    await openAppSettings();
+                  }
+                },
+              ),
+            ),
+        ],
+      );
+    }
   }
 
   Future<void> _onNewData(String? code) async {
