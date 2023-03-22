@@ -98,7 +98,9 @@ class Templates extends _$Templates {
         final value = simpleData["data"][entry.name];
         if (value != null) {
           if (entry is TextEntry) {
-            entry.value = value.toString();
+            entry.value = value;
+          } else if (entry is SegmentEntry) {
+            entry.value = value;
           } else if (entry is CheckboxEntry) {
             entry.value = value;
           } else if (entry is CounterEntry) {
