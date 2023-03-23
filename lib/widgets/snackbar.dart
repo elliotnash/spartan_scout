@@ -36,7 +36,7 @@ void showSnackbar(Widget child) {
       );
     },
     child: child,
-    alignment: const Alignment(0, 0.76),
+    alignment: const Alignment(0, 0.74),
     // margin: EdgeInsets.only(bottom: 100),
     context: ToastProvider.context,
     // contentPadding: EdgeInsets.zero,

@@ -156,7 +156,7 @@ class ScoutingDataWidget extends HookConsumerWidget {
             if (delete) {
               if (password == "robotics") {
                 await handler(true);
-                if (!await ref.read(scoutingDataListProvider(entry.type).notifier).delete(entry.uuid)) {
+                if (!await ref.read(scoutingDataListProvider(entry.type).notifier).delete(entry)) {
                   ref.refresh(scoutingDataListProvider(entry.type));
                 }
               } else {

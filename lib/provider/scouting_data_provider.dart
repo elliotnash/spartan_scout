@@ -77,7 +77,7 @@ class ScoutingDataList extends _$ScoutingDataList {
     if (e is DioError) {
       final error = e.error;
       if (error is SocketException) {
-        if (error.osError!.errorCode == 61) {
+        if (error.osError!.errorCode == 61 || error.osError!.errorCode == 8) {
           message = "Failed to connect to server!";
         }
       }
@@ -115,16 +115,19 @@ class ScoutingDataList extends _$ScoutingDataList {
     _post(data);
   }
 
-  Future<bool> delete(String uuid) async {
+  Future<bool> delete(ScoutingData data) async {
     try {
-      final res = await ref.read(scoutingDioProvider).delete(
+      if (data.isSynced()) {
+        final res = await ref.read(scoutingDioProvider).delete(
           "$kBaseUrl/${type.name}",
-          data: jsonEncode({"uuid": uuid}),
-      );
-      state = AsyncData([...((await future).where((e) => e.uuid != uuid))]);
-
+          data: jsonEncode({"uuid": data.uuid}),
+        );
+      }
       final db = await ref.read(scoutingDatabaseProvider.future);
-      await store.record(uuid).delete(db);
+      await store.record(data.uuid).delete(db);
+
+      state = AsyncData([...((await future).where((e) => e.uuid != data.uuid))]);
+
       return true;
     } catch (e, trace) {
       _onError(e, trace, true);
